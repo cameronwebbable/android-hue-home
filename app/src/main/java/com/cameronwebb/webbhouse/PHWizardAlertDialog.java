@@ -1,4 +1,4 @@
-package com.example.cameronwebb.webbhouse;
+package com.cameronwebb.webbhouse;
 
 /**
  * Created by cameronwebb on 11/29/16.

@@ -1,4 +1,4 @@
-package com.example.cameronwebb.webbhouse;
+package com.cameronwebb.webbhouse;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.example.cameronwebb.webbhouse.data.AccessPointListAdapter;
-import com.example.cameronwebb.webbhouse.data.HueSharedPreferences;
+import com.cameronwebb.webbhouse.data.AccessPointListAdapter;
+import com.cameronwebb.webbhouse.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
 import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
 import com.philips.lighting.hue.sdk.PHHueSDK;

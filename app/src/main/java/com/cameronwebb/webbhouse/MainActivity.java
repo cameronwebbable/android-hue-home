@@ -1,4 +1,4 @@
-package com.example.cameronwebb.webbhouse;
+package com.cameronwebb.webbhouse;
 
 import java.util.List;
 import java.util.Map;
@@ -29,9 +29,15 @@ public class MainActivity extends AppCompatActivity {
 
         phHueSDK = PHHueSDK.create();
 
-        Button randomButton = (Button) findViewById(R.id.connect_button);
-        if ()
-        randomButton.setOnClickListener(new View.OnClickListener() {
+        Button button = (Button) findViewById(R.id.connect_button);
+        if (phHueSDK.getSelectedBridge() == null) {
+            button.setText(R.string.btn_find_bridge);
+        }
+        else {
+            button.setText(R.string.btn_turn_on_off);
+        }
+
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 lightHandler();
@@ -42,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     public void lightHandler() {
         PHBridge bridge = phHueSDK.getSelectedBridge();
 
-        Button connectButton = (Button) findViewById(R.id.connect_button);
         if (bridge == null) {
             Intent intent = new Intent(getApplicationContext(), PHHomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -54,28 +59,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         else {
-            connectButton.setText(R.string.btn_turn_on_off);
-
             List<PHGroup> groups = bridge.getResourceCache().getAllGroups();
 
             Map<String, PHLight> allLights = bridge.getResourceCache().getLights();
-
             List<String> lights = null;
 
             for (PHGroup group : groups) {
                 if (group.getName().equals("Thunderdome")) {
-                    System.out.println(group.getName());
                     lights = group.getLightIdentifiers();
                 }
             }
 
             if (lights != null) {
                 for (String lightId : lights) {
-                    System.out.println(lightId);
                     PHLight light = allLights.get(lightId);
                     if (light != null) {
-                        System.out.println(light.getName());
-                        System.out.println(light.getLastKnownLightState().isOn());
                         Boolean isOn = light.getLastKnownLightState().isOn();
                         light.getLastKnownLightState().setOn(!isOn);
                         bridge.updateLightState(light,light.getLastKnownLightState());

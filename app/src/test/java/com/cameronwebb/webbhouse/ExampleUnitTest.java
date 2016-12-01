@@ -1,4 +1,4 @@
-package com.example.cameronwebb.webbhouse;
+package com.cameronwebb.webbhouse;
 
 import org.junit.Test;
 

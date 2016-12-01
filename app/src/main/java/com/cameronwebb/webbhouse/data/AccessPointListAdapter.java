@@ -1,4 +1,4 @@
-package com.example.cameronwebb.webbhouse.data;
+package com.cameronwebb.webbhouse.data;
 
 /**
  * Created by cameronwebb on 11/29/16.
@@ -15,7 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.philips.lighting.hue.sdk.PHAccessPoint;
-import com.example.cameronwebb.webbhouse.R;
+import com.cameronwebb.webbhouse.R;
 
 /**
  * This class provides adapter view for a list of Found Bridges.
