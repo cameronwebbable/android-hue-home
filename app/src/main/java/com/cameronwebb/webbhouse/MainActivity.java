@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.cameronwebb.webbhouse.dummy.DummyContent;
 import com.philips.lighting.hue.listener.PHLightListener;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.model.PHBridge;
@@ -19,7 +20,7 @@ import com.philips.lighting.model.PHLight;
 import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHLightState;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LightFragment.OnListFragmentInteractionListener {
     private PHHueSDK phHueSDK;
 
     @Override
@@ -32,17 +33,19 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.connect_button);
         if (phHueSDK.getSelectedBridge() == null) {
             button.setText(R.string.btn_find_bridge);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    lightHandler();
+                }
+            });
+
         }
         else {
-            button.setText(R.string.btn_turn_on_off);
+            button.setVisibility(View.GONE);
+            lightHandler();
         }
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lightHandler();
-            }
-        });
     }
 
     public void lightHandler() {
@@ -61,26 +64,10 @@ public class MainActivity extends AppCompatActivity {
         else {
             List<PHGroup> groups = bridge.getResourceCache().getAllGroups();
 
-            Map<String, PHLight> allLights = bridge.getResourceCache().getLights();
-            List<String> lights = null;
 
-            for (PHGroup group : groups) {
-                if (group.getName().equals("Thunderdome")) {
-                    lights = group.getLightIdentifiers();
-                }
-            }
+            LightFragment fragment = (LightFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+            fragment.updateData(groups);
 
-            if (lights != null) {
-                for (String lightId : lights) {
-                    PHLight light = allLights.get(lightId);
-                    if (light != null) {
-                        Boolean isOn = light.getLastKnownLightState().isOn();
-                        light.getLastKnownLightState().setOn(!isOn);
-                        bridge.updateLightState(light,light.getLastKnownLightState());
-
-                    }
-                }
-            }
         }
 
     }
@@ -94,5 +81,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onDestroy();
+    }
+
+    @Override
+    public void onListFragmentInteraction(PHGroup group) {
+        PHBridge bridge = phHueSDK.getSelectedBridge();
+
+        List<String> lights = group.getLightIdentifiers();
+        Map<String, PHLight> allLights = bridge.getResourceCache().getLights();
+
+        if (lights != null) {
+            for (String lightId : lights) {
+                PHLight light = allLights.get(lightId);
+                if (light != null) {
+                    Boolean isOn = light.getLastKnownLightState().isOn();
+                    light.getLastKnownLightState().setOn(!isOn);
+                    bridge.updateLightState(light, light.getLastKnownLightState());
+
+                }
+            }
+        }
     }
 }
